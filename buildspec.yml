@@ -1,0 +1,133 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+  build:
+    commands:
+      - echo Building config file...
+      - |
+        cat > "hapi-fhir-jpaserver-starter/src/main/resources/application.yaml" <<- EOM
+        server:
+          port: $SERVER_PORT
+        management:
+          endpoints:
+            web:
+              exposure:
+                include: "health,prometheus"
+        spring:
+          main:
+            allow-circular-references: true
+          flyway:
+            enabled: true
+            check-location: true
+            baselineOnMigrate: true
+          datasource:
+            url: 'jdbc:postgresql://$DB_HOST:$DB_PORT/$DB_DATABASE'
+            username: $DB_USERNAME
+            password: $DB_PASSWORD
+            driverClassName: org.postgresql.Driver
+            max-active: 15
+            hikari:      
+              maximum-pool-size: 10
+          jpa:
+            properties:
+              hibernate.format_sql: false
+              hibernate.show_sql: false
+              hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgres94Dialect
+              hibernate.search.enabled: true
+              hibernate.search.backend.directory.type: local-filesystem
+              hibernate.search.backend.directory.root: /tmp/lucenefiles
+        hapi:
+          fhir:
+            cr:
+              enabled: false
+            cdshooks:
+              enabled: false
+              clientIdHeaderName: client_id
+            openapi_enabled: true
+            fhir_version: R4
+            ig_runtime_upload_enabled: true
+            implementationguides:
+              clcore:
+                name: hl7.fhir.cl.clcore
+                version: 1.9.1
+                installMode: STORE_AND_INSTALL
+                reloadExisting: false
+              InternationalPatientSummaryIG:
+                name: hl7.fhir.uv.ips
+                version: 2.0.0-ballot
+                reloadExisting: false
+                installMode: STORE_AND_INSTALL
+              ipscl:
+                packageUrl: https://build.fhir.org/ig/HL7Chile/IPS-CL/package.tgz
+                name: hl7.fhir.cl.clips
+                version: 0.3.0-ballot
+                reloadExisting: false
+                installMode: STORE_AND_INSTALL
+                supported_resource_types:
+                  - AllergyIntolerance
+                  - Bundle
+                  - Composition
+                  - Condition
+                  - DiagnosticReport
+                  - ImagingStudy
+                  - Immunization
+                  - MedicationStatement
+                  - MedicationRequest
+                  - Medication
+                  - Observation
+                  - Organization
+                  - Patient
+                  - Practitioner
+                  - PractitionerRole
+                  - Procedure
+                  - Specimen
+            allow_external_references: true
+            ips_enabled: true
+            advanced_lucene_indexing: false
+            bulk_export_enabled: true
+            bulk_import_enabled: true
+            narrative_enabled: true
+            mdm_enabled: false
+            mdm_rules_json_location: "mdm-rules.json"
+            cors:
+              allow_Credentials: true
+              allowed_origin:
+                - '*'
+            search-coord-core-pool-size: 20
+            search-coord-max-pool-size: 100
+            search-coord-queue-capacity: 200
+            custom-bean-packages: server.server.SaludDigital
+            custom-interceptor-classes: server.SaludDigital.CustomCapabilityStatementInterceptor
+            tester:
+              home:
+                name: IPS-Server-HL7
+                server_address: 'http://localhost:$SERVER_PORT/fhir'
+                refuse_to_fetch_third_party_urls: true
+                fhir_version: R4
+            validation:
+              requests_enabled: true
+            inline_resource_storage_below_size: 4000
+            subscription:
+              resthook_enabled: true
+              websocket_enabled: true
+        EOM
+      - cat "hapi-fhir-jpaserver-starter/src/main/resources/application.yaml"
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-8)
+      - IMAGE_TAG=${COMMIT_HASH:=latest}
+      - docker build --no-cache -t $REPO_NAME:$IMAGE_TAG .
+      - docker tag $REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$REPO_NAME:$IMAGE_TAG
+      - docker tag $REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$REPO_NAME:latest 
+  post_build:
+    commands:
+      - echo Pushing Docker image...
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$REPO_NAME:$IMAGE_TAG
+      - IMAGE_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$REPO_NAME:$IMAGE_TAG
+      - echo '[{"name":"'$REPO_NAME'","imageUri":"'$IMAGE_URI'"}]'
+      - printf '[{"name":"'$REPO_NAME'","imageUri":"'$IMAGE_URI'"}]' > imagedefinitions.json
+artifacts:
+  files:
+    - imagedefinitions.json

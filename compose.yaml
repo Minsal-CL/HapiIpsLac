@@ -1,0 +1,66 @@
+services:
+  repo_ips_lac:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: IPS-lacpass-Chile
+    restart: on-failure
+    environment:
+      TZ: "America/Santiago"
+    ports:
+      - "8282:8282"
+    configs:
+      - source: hapi
+        target: /app/config/application.yaml
+    # networks:
+    #   - default
+    depends_on:
+      - postgres-ips-lac
+    
+
+  postgres-ips-lac:
+    image: postgres:14
+    restart: always
+    environment:
+      POSTGRES_DB: "hapi"
+      POSTGRES_USER: "admin"
+      POSTGRES_PASSWORD: "admin"
+      PGTZ: "America/Santiago"
+      TZ: "America/Santiago"
+    volumes:
+      - hapi-fhir-postgres:/var/lib/postgresql/data
+    # networks:
+    #   - default
+
+  elasticsearch:
+    image: bitnami/elasticsearch:latest
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - node.name=ipslac
+      - cluster.name=ipslac-cluster
+      - "ES_JAVA_OPTS=-Xms4g -Xmx4g"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://elasticsearch:9200"]
+      interval: 1s
+      timeout: 1s
+      retries: 60
+    ports:
+      - "9200:9200"
+    mem_reservation: 4g 
+    # networks:
+    #   - default
+
+volumes:
+  hapi-fhir-postgres:
+  elastic:
+
+configs:
+  hapi:
+     file: ./hapi.application.yaml
+
+# networks:
+#   default:
+#     name: ipslacchile
+#     external: true
