@@ -148,9 +148,9 @@ public class IpsGeneratorSvcImpl implements IIpsGeneratorSvc {
 			}
 
 			for (IIpsGenerationStrategy strategy : myGenerationStrategies) {
-				String bundleProfile = strategy.getBundleProfile();
-				System.out.println("Checking strategy: " + bundleProfile); // 👈 imprime todas las opciones
-				if (theRequestedProfile.equals(bundleProfile)) {
+				String CompositionProfile = strategy.getCompositionProfile();
+				System.out.println("Checking strategy: " + CompositionProfile); // 👈 imprime todas las opciones
+				if (theRequestedProfile.equals(CompositionProfile)) {
 					return strategy;
 				}
 			}
