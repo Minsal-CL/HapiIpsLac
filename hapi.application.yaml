@@ -3,7 +3,7 @@
 server:
   #  servlet:
   #    context-path: /example/path
-  port: 8282
+  port: 80
   # tomcat:
   #   relaxed-query-chars: "|"
 
