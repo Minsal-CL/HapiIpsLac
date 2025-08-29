@@ -170,7 +170,7 @@ hapi:
       
       ICVP:
         packageUrl: https://worldhealthorganization.github.io/smart-icvp/package.tgz
-        name: uv.icvp
+        name: smart.who.int.icvp
         version: 0.1.0
         installMode: STORE_AND_INSTALL
         reloadExisting: false
