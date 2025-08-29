@@ -171,15 +171,9 @@ hapi:
       ICVP:
         packageUrl: https://worldhealthorganization.github.io/smart-icvp/package.tgz
         name: uv.icvp
-        version: 1.1.0
-        installMode: STORE_AND_INSTALL
-        reloadExisting: false
-      
-      InternationalPatientSummaryIG:
-        name: smart.who.int.icvp
         version: 0.1.0
-        reloadExisting: false
         installMode: STORE_AND_INSTALL
+        reloadExisting: false
       
       IHE_ITI_MHD:
         name: ihe.iti.mhd
@@ -313,7 +307,7 @@ hapi:
     tester:
       home:
         name: IPS-lac-Server
-        server_address: 'http://localhost:8282/fhir'
+        server_address: 'http://10.68.174.222/fhir'
         refuse_to_fetch_third_party_urls: true
         fhir_version: R4
       # global:
