@@ -168,12 +168,21 @@ hapi:
         installMode: STORE_AND_INSTALL
         reloadExisting: false
       
+<<<<<<< HEAD
       #ICVP:
       #  packageUrl: https://worldhealthorganization.github.io/smart-icvp/package.tgz
       #  name: smart.who.int.icvp
       #  version: 0.1.0
       #  installMode: STORE_AND_INSTALL
       #  reloadExisting: false
+=======
+      ICVP:
+        packageUrl: https://worldhealthorganization.github.io/smart-icvp/package.tgz
+        name: smart.who.int.icvp
+        version: 0.3.0
+        installMode: STORE_AND_INSTALL
+        reloadExisting: false
+>>>>>>> 2063deb (merge)
       
       IHE_ITI_MHD:
         name: ihe.iti.mhd
@@ -307,7 +316,7 @@ hapi:
     tester:
       home:
         name: IPS-lac-Server
-        server_address: 'http://10.68.174.222/fhir'
+        server_address: 'https://hapilocal.nodonacionalph4h-dev.minsal.cl/fhir'
         refuse_to_fetch_third_party_urls: true
         fhir_version: R4
       # global:
