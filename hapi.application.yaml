@@ -167,22 +167,13 @@ hapi:
         version: 0.2
         installMode: STORE_AND_INSTALL
         reloadExisting: false
-      
-<<<<<<< HEAD
-      #ICVP:
-      #  packageUrl: https://worldhealthorganization.github.io/smart-icvp/package.tgz
-      #  name: smart.who.int.icvp
-      #  version: 0.1.0
-      #  installMode: STORE_AND_INSTALL
-      #  reloadExisting: false
-=======
+    
       ICVP:
         packageUrl: https://worldhealthorganization.github.io/smart-icvp/package.tgz
         name: smart.who.int.icvp
         version: 0.3.0
         installMode: STORE_AND_INSTALL
         reloadExisting: false
->>>>>>> 2063deb (merge)
       
       IHE_ITI_MHD:
         name: ihe.iti.mhd
