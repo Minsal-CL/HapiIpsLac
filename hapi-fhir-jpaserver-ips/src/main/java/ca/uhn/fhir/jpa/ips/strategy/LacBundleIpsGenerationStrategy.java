@@ -13,12 +13,12 @@ public class LacBundleIpsGenerationStrategy extends DefaultJpaIpsGenerationStrat
 	@Override
 	public String getBundleProfile() {
 		System.out.println("Lac strategy profile requested!");
-		return "http://lacpass.racsel.org/StructureDefinition/lac-bundle";
+		return "http://racsel.org/StructureDefinition/LACBundleIPS";
 	}
 
     @Override
 	public String getCompositionProfile() {
-		return "http://lacpass.racsel.org/StructureDefinition/lac-composition";
+		return "http://racsel.org/StructureDefinition/LACCompositionIPS";
 	}
 
 }
