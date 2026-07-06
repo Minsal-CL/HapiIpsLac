@@ -155,23 +155,23 @@ hapi:
     ### the deepest folder level will be used. E.g. - if you put file:/foo/bar/bazz as value then the files are resolved under /static/bazz/**
     #staticLocation: file:/foo/bar/bazz
     ### enable to set the Server URL
-    server_address: http://10.68.174.221:8080/fhir
+    server_address: https://hapinacional.nodonacionalph4h-dev.minsal.cl/fhir
     #    defer_indexing_for_codesystems_of_size: 101
     #    install_transitive_ig_dependencies: true
 
     implementationguides:
     ###    example from registry (packages.fhir.org)
-      LACPassIPS:
-        packageUrl: https://lacpass.racsel.org/package.tgz
-        name: lacpass.racsel.org
-        version: 0.1.0
+      PH4HRACSEL:
+        packageUrl: https://ig.racsel.org/package.tgz
+        name: racsel.org
+        version: 0.2
         installMode: STORE_AND_INSTALL
         reloadExisting: false
-      
+    
       ICVP:
         packageUrl: https://worldhealthorganization.github.io/smart-icvp/package.tgz
         name: smart.who.int.icvp
-        version: 0.1.0
+        version: 0.3.0
         installMode: STORE_AND_INSTALL
         reloadExisting: false
       
@@ -307,7 +307,7 @@ hapi:
     tester:
       home:
         name: IPS-lac-Server
-        server_address: 'http://10.68.174.222/fhir'
+        server_address: 'https://hapilocal.nodonacionalph4h-dev.minsal.cl/fhir'
         refuse_to_fetch_third_party_urls: true
         fhir_version: R4
       # global:

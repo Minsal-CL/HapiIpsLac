@@ -33,7 +33,7 @@ services:
     #   - default
 
   elasticsearch:
-    image: bitnami/elasticsearch:latest
+    image: elasticsearch:9.2.8
     container_name: elasticsearch
     environment:
       - discovery.type=single-node
