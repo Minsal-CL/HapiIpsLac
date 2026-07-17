@@ -127,14 +127,14 @@ public abstract class BaseIpsGenerationStrategy implements IIpsGenerationStrateg
 		organization
 				//.getMeta().addProfile("https://hl7chile.cl/fhir/ig/clips/StructureDefinition/Organizacion-cl-ips")
 				
-				.setName("Ministerio de Salud de Chile")
+				.setName("Hospital San Borja")
 				.addAddress(new Address()
-						.addLine("Enrique Mac Iver 541")
+						.addLine("Santa Rosa 1234")
 						.setCity("Santiago")
 						.setPostalCode("8320064")
 						.setCountry("CL"))
 				.setMeta(new Meta ()
-						.addProfile("http://lacpass.racsel.org/StructureDefinition/lac-organization")
+						.addProfile("http://racsel.org/StructureDefinition/LACOrganization")
 						)
 				.setId(IdType.newRandomUuid());
 		return organization;
